@@ -8,10 +8,8 @@
 @endpush
 
 @section('main')
-    <div class="card card-primary">
-        <div class="card-header">
+    <div class="card-login card-primary">
             <h4>Login</h4>
-        </div>
 
         <div class="card-body">
             <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate="">

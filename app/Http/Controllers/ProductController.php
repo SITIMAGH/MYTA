@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -69,13 +71,21 @@ class ProductController extends Controller
         // Save the changes to the database
         $product->save();
 
-        return redirect()->route('product.index')->with('success', 'Product successfully updated');
+        return redirect()->route('product.index')->with('success', 'Produk berhasil diperbarui');
     }
 
     public function destroy($id)
     {
-        $product = \App\Models\Product::findOrFail($id);
-        $product->delete();
-        return redirect()->route('product.index')->with('success', 'Product successfully deleted');
+        try {
+            $product = Product::findOrFail($id);
+
+            // Hapus produk
+            $product->delete();
+
+            return redirect()->route('product.index')->with('success', 'Berhasil menghapus produk');
+        } catch (QueryException $e) {
+            // Tangkap pengecualian dan atur flash message
+            return redirect()->route('product.index')->with('error', 'Gagal menghapus produk yang sudah pernah di transaksikan');
+        }
     }
 }

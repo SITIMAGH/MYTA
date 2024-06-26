@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -48,12 +49,16 @@ class UserController extends Controller
         $data = $request->validated();
         $user->update($data);
 
-        return redirect()->route('user.index')->with('success', 'User successfully updated');
+        return redirect()->route('user.index')->with('success', 'sukses memperbarui data');
     }
 
     public function destroy(User $user)
     {
-        $user->delete();
-        return redirect()->route('user.index')->with('success', 'User successfully deleted');
+        try {
+            $user->delete();
+            return redirect()->route('user.index')->with('success', 'Pengguna berhasil dihapus');
+        } catch (QueryException $e) {
+            return redirect()->route('user.index')->with('error', 'gagal dihapusr: pengguna telah direkam dan menjadi history.');
+        }
     }
 }
